@@ -42,6 +42,7 @@ const InteractiveTable = () => {
         }
 
         selectedAnimal.image_url = data.path;
+        delete selectedAnimal.imageFile; // Ensure imageFile is not saved in the database
       }
 
       await updateAnimal.mutateAsync(selectedAnimal);
