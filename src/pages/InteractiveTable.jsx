@@ -73,6 +73,7 @@ const InteractiveTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
+            <TableHead>Image</TableHead> {/* New Image Column */}
             <TableHead>Name</TableHead>
             <TableHead>Species</TableHead>
             <TableHead>Created At</TableHead>
@@ -83,6 +84,13 @@ const InteractiveTable = () => {
           {animals.map((animal) => (
             <TableRow key={animal.id}>
               <TableCell>{animal.id}</TableCell>
+              <TableCell>
+                {animal.image_url ? (
+                  <img src={`${supabase.storage.from('animals').getPublicUrl(animal.image_url).publicURL}`} alt={animal.name} className="h-12 w-12 object-cover" />
+                ) : (
+                  "No Image"
+                )}
+              </TableCell>
               <TableCell>{animal.name}</TableCell>
               <TableCell>{animal.species}</TableCell>
               <TableCell>{new Date(animal.created_at).toLocaleDateString()}</TableCell>
