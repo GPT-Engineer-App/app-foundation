@@ -2,14 +2,14 @@ import { SupabaseAuthUI } from "../integrations/supabase/auth.jsx";
 
 export default function Login() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="flex items-center justify-center py-12 h-full">
+    <div className="flex min-h-screen">
+      <div className="flex items-center justify-center w-1/2">
         <div className="mx-auto grid w-[350px] gap-4 h-full">
           
           <SupabaseAuthUI />
         </div>
       </div>
-      <div className="hidden bg-muted lg:block h-full">
+      <div className="hidden lg:flex w-1/2">
         <img
           src="/images/stockholm-city.jpg"
           alt="Stockholm City"
