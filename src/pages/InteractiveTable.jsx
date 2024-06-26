@@ -33,7 +33,7 @@ const InteractiveTable = () => {
       if (selectedAnimal.imageFile) {
         const { data, error } = await supabase.storage
           .from('animals')
-          .upload(`public/${session.user.id}/${selectedAnimal.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+          .upload(`${session.user.id}/${selectedAnimal.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
 
         if (error) {
           console.log("Image upload error:", error);
