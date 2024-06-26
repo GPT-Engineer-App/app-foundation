@@ -76,6 +76,12 @@ const InteractiveTable = () => {
         return;
       }
 
+      if (!data || data.length === 0) {
+        console.log("No data returned during creation");
+        toast.error("Failed to create animal");
+        return;
+      }
+
       if (selectedAnimal.imageFile) {
         const { data: imageData, error: imageError } = await supabase.storage
           .from('animals')
