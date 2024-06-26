@@ -68,7 +68,7 @@ const InteractiveTable = () => {
   const handleCreate = async () => {
     try {
       const createdAnimal = { name: selectedAnimal.name, species: selectedAnimal.species, image_url: "", created_at: new Date().toISOString() };
-      const { data: createdAnimal, error: createError } = await addAnimal.mutateAsync(createdAnimal);
+      const { data: createdAnimalResponse, error: createError } = await addAnimal.mutateAsync(createdAnimal);
 
       if (createError) {
         console.log("Error during creation:", createError);
@@ -76,7 +76,7 @@ const InteractiveTable = () => {
         return;
       }
 
-      if (!createdAnimal || createdAnimal.length === 0) {
+      if (!createdAnimalResponse || createdAnimalResponse.length === 0) {
         console.log("No data returned during creation");
         toast.error("Failed to create animal");
         return;
@@ -85,13 +85,13 @@ const InteractiveTable = () => {
       if (selectedAnimal.imageFile) {
         const { data: imageData, error: imageError } = await supabase.storage
           .from('animals')
-          .upload(`${session.user.id}/${createdAnimal[0].id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+          .upload(`${session.user.id}/${createdAnimalResponse[0].id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
 
         if (imageError || !imageData) {
           console.log("Image upload error:", imageError);
           toast.error("Failed to upload image");
         } else {
-          await updateAnimal.mutateAsync({ ...createdAnimal[0], image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
+          await updateAnimal.mutateAsync({ ...createdAnimalResponse[0], image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
         }
       }
 
