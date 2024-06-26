@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Users,
   User,
+  Bot,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -52,8 +53,8 @@ const SharedLayout = () => {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <a href="/" className="flex items-center gap-2 font-semibold">
-              <Package2 className="h-6 w-6" />
-              <span className="">Acme Inc</span>
+              <Bot className="h-6 w-6" />
+              <span className="">GPTE Demos</span>
             </a>
           </div>
           <div className="flex-1">
@@ -98,8 +99,8 @@ const SharedLayout = () => {
                   href="#"
                   className="flex items-center gap-2 text-lg font-semibold"
                 >
-                  <Package2 className="h-6 w-6" />
-                  <span className="sr-only">Acme Inc</span>
+                  <Bot className="h-6 w-6" />
+                  <span className="sr-only">GPTE Demos</span>
                 </a>
                 <NavLink
                   to="/"
