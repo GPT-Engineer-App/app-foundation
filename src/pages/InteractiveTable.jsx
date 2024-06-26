@@ -40,11 +40,6 @@ const InteractiveTable = () => {
 
   const handleSave = async () => {
     try {
-      if (!session || !session.user) {
-        toast.error("User is not authenticated");
-        return;
-      }
-
       if (selectedAnimal.imageFile) {
         const { data, error } = await supabase.storage
           .from('animals')
