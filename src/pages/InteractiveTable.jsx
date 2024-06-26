@@ -67,7 +67,7 @@ const InteractiveTable = () => {
 
   const handleCreate = async () => {
     try {
-      const newAnimal = { name: "", species: "", image_url: "", created_at: new Date().toISOString() };
+      const newAnimal = { name: selectedAnimal.name, species: selectedAnimal.species, image_url: "", created_at: new Date().toISOString() };
       const { data, error } = await addAnimal.mutateAsync(newAnimal);
 
       if (error) {
@@ -76,7 +76,21 @@ const InteractiveTable = () => {
         return;
       }
 
-      setSelectedAnimal(data[0]);
+      if (selectedAnimal.imageFile) {
+        const { data: imageData, error: imageError } = await supabase.storage
+          .from('animals')
+          .upload(`${session.user.id}/${data[0].id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+
+        if (imageError) {
+          console.log("Image upload error:", imageError);
+          toast.error("Failed to upload image");
+          return;
+        }
+
+        await updateAnimal.mutateAsync({ ...data[0], image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
+      }
+
+      setSelectedAnimal(null);
       setIsCreating(false);
       toast.success("Animal created successfully!");
     } catch (error) {
