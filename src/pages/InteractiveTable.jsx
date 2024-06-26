@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDropzone } from 'react-dropzone';
-import { useAnimals, useUpdateAnimal, useDeleteAnimal, supabase } from "../integrations/supabase/index.js";
+import { useAnimals, useUpdateAnimal, useDeleteAnimal } from "../integrations/supabase/index.js";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -30,20 +30,6 @@ const InteractiveTable = () => {
 
   const handleSave = async () => {
     try {
-      if (selectedAnimal.imageFile) {
-        const { data, error } = await supabase.storage
-          .from('animals')
-          .upload(`${session.user.id}/${selectedAnimal.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
-
-        if (error) {
-          console.log("Image upload error:", error);
-          toast.error("Failed to upload image");
-          return;
-        }
-
-        selectedAnimal.image_url = data.path;
-      }
-
       await updateAnimal.mutateAsync(selectedAnimal);
       setIsEditing(false);
       toast.success("Animal updated successfully!");
@@ -129,7 +115,10 @@ const InteractiveTable = () => {
               <div {...getRootProps()} className="border-dashed border-2 p-4">
                 <input {...getInputProps()} />
                 {selectedAnimal.imageFile ? (
-                  <p>{selectedAnimal.imageFile.name}</p>
+                  <div>
+                    <p>{selectedAnimal.imageFile.name}</p>
+                    <img src={URL.createObjectURL(selectedAnimal.imageFile)} alt="Selected" className="mt-2 max-h-48" />
+                  </div>
                 ) : (
                   <p>Drag 'n' drop an image here, or click to select one</p>
                 )}
