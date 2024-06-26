@@ -29,9 +29,18 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 
 function SharedLayout() {
+  const { session, logout } = useSupabaseAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -153,7 +162,11 @@ function SharedLayout() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              {session ? (
+                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => navigate("/login")}>Login</DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
