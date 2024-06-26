@@ -4,7 +4,7 @@ import SharedLayout from "./components/SharedLayout.jsx";
 import Login from "./pages/Login.jsx";
 import { SupabaseAuthProvider } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Settings.jsx";
-
+import { Toaster } from 'sonner';
 
 function App() {
   return (
@@ -18,7 +18,9 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <Toaster />
     </SupabaseAuthProvider>
   );
 }
+
 export default App;
