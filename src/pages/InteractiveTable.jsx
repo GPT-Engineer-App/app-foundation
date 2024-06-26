@@ -68,15 +68,15 @@ const InteractiveTable = () => {
   const handleCreate = async () => {
     try {
       const newAnimal = { name: selectedAnimal.name, species: selectedAnimal.species, image_url: "", created_at: new Date().toISOString() };
-      const { data, error } = await addAnimal.mutateAsync(newAnimal);
+      const { data: createdAnimal, error: createError } = await addAnimal.mutateAsync(newAnimal);
 
-      if (error) {
-        console.log("Error during creation:", error);
+      if (createError) {
+        console.log("Error during creation:", createError);
         toast.error("Failed to create animal");
         return;
       }
 
-      if (!data || data.length === 0) {
+      if (!createdAnimal || createdAnimal.length === 0) {
         console.log("No data returned during creation");
         toast.error("Failed to create animal");
         return;
@@ -85,15 +85,14 @@ const InteractiveTable = () => {
       if (selectedAnimal.imageFile) {
         const { data: imageData, error: imageError } = await supabase.storage
           .from('animals')
-          .upload(`${session.user.id}/${data.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+          .upload(`${session.user.id}/${createdAnimal[0].id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
 
-        if (imageError) {
+        if (imageError || !imageData) {
           console.log("Image upload error:", imageError);
           toast.error("Failed to upload image");
-          return;
+        } else {
+          await updateAnimal.mutateAsync({ ...createdAnimal[0], image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
         }
-
-        await updateAnimal.mutateAsync({ ...data, image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
       }
 
       setSelectedAnimal(null);
@@ -101,6 +100,7 @@ const InteractiveTable = () => {
       toast.success("Animal created successfully!");
     } catch (error) {
       console.log("Error during creation:", error);
+      toast.error("An unexpected error occurred");
     }
   };
 
