@@ -5,6 +5,7 @@ import Login from "./pages/Login.jsx";
 import { SupabaseAuthProvider } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Settings.jsx";
 import InteractiveTable from "./pages/InteractiveTable.jsx";
+import Chatbot from "./pages/Chatbot.jsx"; // Import the Chatbot page
 import { Toaster } from 'sonner';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route index element={<Index />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/interactive-table" element={<InteractiveTable />} />
+            <Route path="/chatbot" element={<Chatbot />} /> {/* Add the Chatbot route */}
           </Route>
         </Routes>
       </Router>
