@@ -1,7 +1,6 @@
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { useState, useEffect } from "react";
 import { useDropzone } from 'react-dropzone';
-import { useAnimals, useUpdateAnimal, useDeleteAnimal, supabase } from "../integrations/supabase/index.js";
+import { useAnimals, useUpdateAnimal, useDeleteAnimal, useAddAnimal, supabase } from "../integrations/supabase/index.js";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -10,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const IMAGE_URL_PREFIX = "https://gzebeizzqadyipfhvkuo.supabase.co/storage/v1/object/public/";
 
@@ -17,9 +17,11 @@ const InteractiveTable = () => {
   const { data: animals, isLoading, error } = useAnimals();
   const updateAnimal = useUpdateAnimal();
   const deleteAnimal = useDeleteAnimal();
+  const addAnimal = useAddAnimal();
   const { session } = useSupabaseAuth();
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [animalList, setAnimalList] = useState([]);
 
   useEffect(() => {
@@ -63,6 +65,25 @@ const InteractiveTable = () => {
     }
   };
 
+  const handleCreate = async () => {
+    try {
+      const newAnimal = { name: "", species: "", image_url: "", created_at: new Date().toISOString() };
+      const { data, error } = await addAnimal.mutateAsync(newAnimal);
+
+      if (error) {
+        console.log("Error during creation:", error);
+        toast.error("Failed to create animal");
+        return;
+      }
+
+      setSelectedAnimal(data[0]);
+      setIsCreating(false);
+      toast.success("Animal created successfully!");
+    } catch (error) {
+      console.log("Error during creation:", error);
+    }
+  };
+
   const onDrop = (acceptedFiles) => {
     setSelectedAnimal({ ...selectedAnimal, imageFile: acceptedFiles[0] });
   };
@@ -89,6 +110,7 @@ const InteractiveTable = () => {
 
   return (
     <div className="p-4">
+      <Button onClick={() => setIsCreating(true)} className="mb-4">Create Animal</Button>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="animals">
           {(provided) => (
@@ -96,7 +118,7 @@ const InteractiveTable = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Image</TableHead> {/* New Image Column */}
+                  <TableHead>Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Species</TableHead>
                   <TableHead>Created At</TableHead>
@@ -178,6 +200,43 @@ const InteractiveTable = () => {
                 )}
               </div>
               <Button onClick={handleSave}>Save</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isCreating && (
+        <Dialog open={isCreating} onOpenChange={setIsCreating}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Animal</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name">Name</label>
+                <Input
+                  id="name"
+                  value={selectedAnimal?.name || ""}
+                  onChange={(e) => setSelectedAnimal({ ...selectedAnimal, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor="species">Species</label>
+                <Input
+                  id="species"
+                  value={selectedAnimal?.species || ""}
+                  onChange={(e) => setSelectedAnimal({ ...selectedAnimal, species: e.target.value })}
+                />
+              </div>
+              <div {...getRootProps()} className="border-dashed border-2 p-4">
+                <input {...getInputProps()} />
+                {selectedAnimal?.imageFile ? (
+                  <p>{selectedAnimal.imageFile.name}</p>
+                ) : (
+                  <p>Drag 'n' drop an image here, or click to select one</p>
+                )}
+              </div>
+              <Button onClick={handleCreate}>Create</Button>
             </div>
           </DialogContent>
         </Dialog>
