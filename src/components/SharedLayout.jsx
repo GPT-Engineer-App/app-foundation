@@ -32,7 +32,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useProfile } from "../integrations/supabase/profile.jsx";
+import { useProfile } from "../integrations/supabase/index.js";
 
 const SharedLayout = () => {
   const { session, logout } = useSupabaseAuth();
