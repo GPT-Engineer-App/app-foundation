@@ -58,7 +58,7 @@ const InteractiveTable = () => {
               <TableCell>{animal.species}</TableCell>
               <TableCell>{new Date(animal.created_at).toLocaleDateString()}</TableCell>
               <TableCell>
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline">Actions</Button>
                   </DropdownMenuTrigger>
