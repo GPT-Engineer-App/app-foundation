@@ -9,6 +9,7 @@ import {
   Search,
   ShoppingCart,
   Users,
+  User,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -157,7 +158,9 @@ const SharedLayout = () => {
               <Button variant="secondary" size="icon" className="rounded-full">
                 <Avatar>
                   <AvatarImage src={profile?.avatar_url} alt="User Avatar" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
                 </Avatar>
                 <span className="sr-only">Toggle user menu</span>
               </Button>
