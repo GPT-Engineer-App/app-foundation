@@ -147,7 +147,8 @@ const SharedLayout = () => {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
+              <Button variant="secondary" size="icon" className="rounded-full flex items-center gap-2">
+                {profile?.username && <span>{profile.username}</span>}
                 <Avatar>
                   <AvatarImage src={profile?.avatar_url} alt="User Avatar" />
                   <AvatarFallback>
