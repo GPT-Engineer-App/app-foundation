@@ -51,7 +51,7 @@ const InteractiveTable = () => {
           return;
         }
 
-        selectedAnimal.image_url = data.path; // Save the full path
+        selectedAnimal.image_url = `https://gzebeizzqadyipfhvkuo.supabase.co/storage/v1/object/public/animals/${data.path}`; // Save the full path
         delete selectedAnimal.imageFile; // Ensure imageFile is not saved in the database
       }
 
@@ -91,7 +91,7 @@ const InteractiveTable = () => {
           console.log("Image upload error:", imageError);
           toast.error("Failed to upload image");
         } else {
-          await updateAnimal.mutateAsync({ ...fetchedAnimal, image_url: imageData.path }); // Save the full path
+          await updateAnimal.mutateAsync({ ...fetchedAnimal, image_url: `https://gzebeizzqadyipfhvkuo.supabase.co/storage/v1/object/public/animals/${imageData.path}` }); // Save the full path
         }
       }
 
