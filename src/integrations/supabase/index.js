@@ -38,6 +38,7 @@ const fromSupabase = async (query) => {
 | created_at | timestamptz | string | true     |
 | name       | text        | string | false    |
 | species    | text        | string | false    |
+| image_url  | text        | string | false    |
 
 */
 
