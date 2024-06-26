@@ -57,7 +57,7 @@ const Chatbot = () => {
             key={index}
             className={`flex items-start p-2 my-2 rounded-lg ${
               message.sender === "user" ? "bg-blue-500 text-white self-end" : "bg-gray-300 text-black self-start"
-            }`}
+            } message-container`}
             style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
           >
             {message.sender === "user" ? (
