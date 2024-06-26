@@ -41,7 +41,7 @@ const InteractiveTable = () => {
           return;
         }
 
-        selectedAnimal.image_url = `/animals/${data.path}`;
+        selectedAnimal.image_url = `https://gzebeizzqadyipfhvkuo.supabase.co/storage/v1/object/public/animals/${data.path}`;
         delete selectedAnimal.imageFile; // Ensure imageFile is not saved in the database
       }
 
