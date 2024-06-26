@@ -188,7 +188,7 @@ const InteractiveTable = () => {
               </div>
               {selectedAnimal.image_url && (
                 <div className="flex justify-center">
-                  <img src={selectedAnimal.image_url} alt={selectedAnimal.name} className="h-24 w-24 object-cover" />
+                  <img src={`${IMAGE_URL_PREFIX}${selectedAnimal.image_url}`} alt={selectedAnimal.name} className="h-24 w-24 object-cover" />
                 </div>
               )}
               <div {...getRootProps()} className="border-dashed border-2 p-4">
