@@ -12,6 +12,7 @@ import {
   ShoppingCart,
   Users,
   User,
+  Table,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -66,16 +67,16 @@ const SharedLayout = () => {
                 <Home className="h-4 w-4" />
                 Home
               </NavLink>
-              <a
-                href="#"
+              <NavLink
+                to="/interactive-table"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-                <ShoppingCart className="h-4 w-4" />
-                New page
+                <Table className="h-4 w-4" />
+                Interactive table
                 <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                   6
                 </Badge>
-              </a>
+              </NavLink>
             </nav>
           </div>
         </div>
