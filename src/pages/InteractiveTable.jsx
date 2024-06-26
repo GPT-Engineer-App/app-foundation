@@ -85,7 +85,7 @@ const InteractiveTable = () => {
       if (selectedAnimal.imageFile) {
         const { data: imageData, error: imageError } = await supabase.storage
           .from('animals')
-          .upload(`${session.user.id}/${data[0].id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+          .upload(`${session.user.id}/${data.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
 
         if (imageError) {
           console.log("Image upload error:", imageError);
@@ -93,7 +93,7 @@ const InteractiveTable = () => {
           return;
         }
 
-        await updateAnimal.mutateAsync({ ...data[0], image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
+        await updateAnimal.mutateAsync({ ...data, image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
       }
 
       setSelectedAnimal(null);
