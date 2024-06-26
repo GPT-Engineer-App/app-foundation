@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { Checkbox } from "@/components/ui/checkbox";
 
 const InteractiveTable = () => {
   const { data: animals, isLoading, error } = useAnimals();
@@ -21,6 +22,7 @@ const InteractiveTable = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [animalList, setAnimalList] = useState([]);
+  const [selectedAnimals, setSelectedAnimals] = useState([]);
 
   useEffect(() => {
     if (animals) {
@@ -35,6 +37,7 @@ const InteractiveTable = () => {
 
   const handleDelete = async (id) => {
     await deleteAnimal.mutateAsync(id);
+    setSelectedAnimals(selectedAnimals.filter(animalId => animalId !== id));
     toast.success("Animal deleted successfully!");
   };
 
@@ -120,6 +123,22 @@ const InteractiveTable = () => {
     setAnimalList(items);
   };
 
+  const handleSelectAnimal = (id) => {
+    setSelectedAnimals(prevSelected =>
+      prevSelected.includes(id)
+        ? prevSelected.filter(animalId => animalId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
+  const handleBatchDelete = async () => {
+    for (const id of selectedAnimals) {
+      await deleteAnimal.mutateAsync(id);
+    }
+    setSelectedAnimals([]);
+    toast.success("Selected animals deleted successfully!");
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -130,19 +149,36 @@ const InteractiveTable = () => {
 
   return (
     <div className="p-4">
-      <Button onClick={() => setIsCreating(true)} className="mb-4">Create Animal</Button>
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => setIsCreating(true)} className="mr-2">Create Animal</Button>
+        {selectedAnimals.length > 0 && (
+          <Button onClick={handleBatchDelete} variant="destructive">Delete Selected</Button>
+        )}
+      </div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="animals">
           {(provided) => (
             <Table {...provided.droppableProps} ref={provided.innerRef}>
               <TableHeader>
                 <TableRow>
+                  <TableHead>
+                    <Checkbox
+                      checked={selectedAnimals.length === animalList.length}
+                      onChange={() => {
+                        if (selectedAnimals.length === animalList.length) {
+                          setSelectedAnimals([]);
+                        } else {
+                          setSelectedAnimals(animalList.map(animal => animal.id));
+                        }
+                      }}
+                    />
+                  </TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead>Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Species</TableHead>
                   <TableHead>Created At</TableHead>
-                  <TableHead>Actions</TableHead>
+                  {session && <TableHead>Actions</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -150,6 +186,12 @@ const InteractiveTable = () => {
                   <Draggable key={animal.id} draggableId={animal.id.toString()} index={index}>
                     {(provided) => (
                       <TableRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedAnimals.includes(animal.id)}
+                            onChange={() => handleSelectAnimal(animal.id)}
+                          />
+                        </TableCell>
                         <TableCell>{animal.id}</TableCell>
                         <TableCell>
                           {animal.image_url ? (
@@ -161,17 +203,19 @@ const InteractiveTable = () => {
                         <TableCell>{animal.name}</TableCell>
                         <TableCell>{animal.species}</TableCell>
                         <TableCell>{new Date(animal.created_at).toLocaleDateString()}</TableCell>
-                        <TableCell>
-                          <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger asChild>
-                              <MoreHorizontal className="h-4 w-4 cursor-pointer" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem onClick={() => handleEdit(animal)}>Edit</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleDelete(animal.id)}>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
+                        {session && (
+                          <TableCell>
+                            <DropdownMenu modal={false}>
+                              <DropdownMenuTrigger asChild>
+                                <MoreHorizontal className="h-4 w-4 cursor-pointer" />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                <DropdownMenuItem onClick={() => handleEdit(animal)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDelete(animal.id)}>Delete</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        )}
                       </TableRow>
                     )}
                   </Draggable>
