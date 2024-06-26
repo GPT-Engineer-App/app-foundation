@@ -6,10 +6,10 @@ function Index() {
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <Card>
         <CardHeader>
-          <CardTitle>Welcome to the Bare-Bones Web Application</CardTitle>
+          <CardTitle>This is a GPT Engineer Demo app</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>This is a minimal web application with a simple structure that you can modify and build upon.</p>
+          <p>You will be able to play around with different demo apps.</p>
           <Button variant="outline" className="mt-4">Get Started</Button>
         </CardContent>
       </Card>
