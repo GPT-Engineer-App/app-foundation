@@ -3,7 +3,7 @@ import Index from "./pages/Index.jsx";
 import SharedLayout from "./components/SharedLayout.jsx";
 import Login from "./pages/Login.jsx";
 import { SupabaseAuthProvider } from "./integrations/supabase/auth.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
 
 function App() {
   return (
@@ -12,14 +12,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<SharedLayout />}>
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
+            <Route index element={<Index />} />
             {/* Add more routes here as needed */}
           </Route>
         </Routes>
