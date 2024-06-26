@@ -5,18 +5,35 @@ import { Button } from "@/components/ui/button";
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [threadId, setThreadId] = useState(null);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      setMessages([...messages, { text: input, sender: "user" }]);
+      const userMessage = { text: input, sender: "user" };
+      setMessages([...messages, userMessage]);
       setInput("");
-      // Simulate bot response
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: "This is a bot response.", sender: "bot" },
-        ]);
-      }, 1000);
+      try {
+        const response = await fetch("https://okligg.buildship.run/chat_tutor", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: input, threadId }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { text: data.message, sender: "bot" },
+          ]);
+          setThreadId(data.threadId);
+        } else {
+          console.error("Failed to fetch bot response");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
