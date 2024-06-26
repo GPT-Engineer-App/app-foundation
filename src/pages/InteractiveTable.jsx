@@ -11,8 +11,6 @@ import { MoreHorizontal } from "lucide-react";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-const IMAGE_URL_PREFIX = "https://gzebeizzqadyipfhvkuo.supabase.co/storage/v1/object/public/";
-
 const InteractiveTable = () => {
   const { data: animals, isLoading, error } = useAnimals();
   const updateAnimal = useUpdateAnimal();
@@ -53,7 +51,7 @@ const InteractiveTable = () => {
           return;
         }
 
-        selectedAnimal.image_url = `${IMAGE_URL_PREFIX}${data.path}`;
+        selectedAnimal.image_url = data.path; // Save the full path without prefixing
         delete selectedAnimal.imageFile; // Ensure imageFile is not saved in the database
       }
 
@@ -93,7 +91,7 @@ const InteractiveTable = () => {
           console.log("Image upload error:", imageError);
           toast.error("Failed to upload image");
         } else {
-          await updateAnimal.mutateAsync({ ...fetchedAnimal, image_url: `${IMAGE_URL_PREFIX}${imageData.path}` });
+          await updateAnimal.mutateAsync({ ...fetchedAnimal, image_url: imageData.path }); // Save the full path without prefixing
         }
       }
 
@@ -155,7 +153,7 @@ const InteractiveTable = () => {
                         <TableCell>{animal.id}</TableCell>
                         <TableCell>
                           {animal.image_url ? (
-                            <img src={`${IMAGE_URL_PREFIX}${animal.image_url}`} alt={animal.name} className="h-12 w-12 object-cover" />
+                            <img src={animal.image_url} alt={animal.name} className="h-12 w-12 object-cover" />
                           ) : (
                             "No Image"
                           )}
@@ -210,7 +208,7 @@ const InteractiveTable = () => {
               </div>
               {selectedAnimal.image_url && (
                 <div className="flex justify-center">
-                  <img src={`${IMAGE_URL_PREFIX}${selectedAnimal.image_url}`} alt={selectedAnimal.name} className="h-24 w-24 object-cover" />
+                  <img src={selectedAnimal.image_url} alt={selectedAnimal.name} className="h-24 w-24 object-cover" />
                 </div>
               )}
               <div {...getRootProps()} className="border-dashed border-2 p-4">
