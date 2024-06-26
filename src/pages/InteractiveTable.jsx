@@ -27,22 +27,27 @@ const InteractiveTable = () => {
   };
 
   const handleSave = async () => {
-    if (selectedAnimal.imageFile) {
-      const { data, error } = await supabase.storage
-        .from('animals')
-        .upload(`public/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+    try {
+      if (selectedAnimal.imageFile) {
+        const { data, error } = await supabase.storage
+          .from('animals')
+          .upload(`public/${selectedAnimal.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
 
-      if (error) {
-        toast.error("Failed to upload image");
-        return;
+        if (error) {
+          console.log("Image upload error:", error);
+          toast.error("Failed to upload image");
+          return;
+        }
+
+        selectedAnimal.image_url = data.path;
       }
 
-      selectedAnimal.image_url = data.path;
+      await updateAnimal.mutateAsync(selectedAnimal);
+      setIsEditing(false);
+      toast.success("Animal updated successfully!");
+    } catch (error) {
+      console.log("Error during save:", error);
     }
-
-    await updateAnimal.mutateAsync(selectedAnimal);
-    setIsEditing(false);
-    toast.success("Animal updated successfully!");
   };
 
   const onDrop = (acceptedFiles) => {
