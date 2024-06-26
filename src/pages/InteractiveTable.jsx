@@ -86,7 +86,7 @@ const InteractiveTable = () => {
               <TableCell>{animal.id}</TableCell>
               <TableCell>
                 {animal.image_url ? (
-                  <img src={`${supabase.storage.from('animals').getPublicUrl(animal.image_url).publicURL}`} alt={animal.name} className="h-12 w-12 object-cover" />
+                  <img src={animal.image_url} alt={animal.name} className="h-12 w-12 object-cover" />
                 ) : (
                   "No Image"
                 )}
