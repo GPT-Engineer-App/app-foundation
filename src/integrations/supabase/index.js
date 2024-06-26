@@ -30,10 +30,18 @@ const fromSupabase = async (query) => {
 | avatar_url | text        | string | false    |
 | website    | text        | string | false    |
 
+### animals
+
+| name       | type        | format | required |
+|------------|-------------|--------|----------|
+| id         | int8        | number | true     |
+| created_at | timestamptz | string | true     |
+| name       | text        | string | false    |
+| species    | text        | string | false    |
+
 */
 
 // Hooks for profiles table
-
 export const useProfiles = () => useQuery({
     queryKey: ['profiles'],
     queryFn: () => fromSupabase(supabase.from('profiles').select('*')),
@@ -70,6 +78,47 @@ export const useDeleteProfile = () => {
         mutationFn: (id) => fromSupabase(supabase.from('profiles').delete().eq('id', id)),
         onSuccess: () => {
             queryClient.invalidateQueries('profiles');
+        },
+    });
+};
+
+// Hooks for animals table
+export const useAnimals = () => useQuery({
+    queryKey: ['animals'],
+    queryFn: () => fromSupabase(supabase.from('animals').select('*')),
+});
+
+export const useAnimal = (id) => useQuery({
+    queryKey: ['animals', id],
+    queryFn: () => fromSupabase(supabase.from('animals').select('*').eq('id', id).single()),
+});
+
+export const useAddAnimal = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newAnimal) => fromSupabase(supabase.from('animals').insert([newAnimal])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('animals');
+        },
+    });
+};
+
+export const useUpdateAnimal = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedAnimal) => fromSupabase(supabase.from('animals').update(updatedAnimal).eq('id', updatedAnimal.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('animals');
+        },
+    });
+};
+
+export const useDeleteAnimal = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('animals').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('animals');
         },
     });
 };
