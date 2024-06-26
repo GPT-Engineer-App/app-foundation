@@ -4,7 +4,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen">
       <div className="flex items-center justify-center w-1/2 h-screen">
-        <div className="mx-auto grid w-[350px] gap-4 h-full">
+        <div className="mx-auto grid w-[350px] gap-4 h-full flex items-center justify-center">
           
           <SupabaseAuthUI />
         </div>
