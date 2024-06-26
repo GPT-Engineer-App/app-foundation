@@ -14,7 +14,7 @@ export default function Login() {
   }
 
   return (
-    <div className="w-full min-h-screen h-full lg:grid lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full min-h-screen h-full lg:min-h-screen lg:h-full xl:min-h-screen xl:h-full lg:grid lg:grid-cols-2 xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12 h-full">
         <div className="mx-auto grid w-[350px] gap-6 h-full">
           <div className="grid gap-2 text-center">
