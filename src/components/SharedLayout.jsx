@@ -31,10 +31,13 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useProfile } from "../integrations/supabase/profile.jsx";
 
-function SharedLayout() {
+const SharedLayout = () => {
   const { session, logout } = useSupabaseAuth();
   const navigate = useNavigate();
+  const { data: profile } = useProfile(session?.user?.id);
 
   const handleLogout = async () => {
     await logout();
@@ -152,7 +155,10 @@ function SharedLayout() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
-                <CircleUser className="h-5 w-5" />
+                <Avatar>
+                  <AvatarImage src={profile?.avatar_url} alt="User Avatar" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
@@ -175,7 +181,7 @@ function SharedLayout() {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default SharedLayout;

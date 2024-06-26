@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-function Settings() {
+const Settings = () => {
   const { session } = useSupabaseAuth();
   const { data: profile, isLoading } = useProfile(session?.user?.id);
   const updateProfile = useUpdateProfile();
@@ -23,7 +24,7 @@ function Settings() {
 
   const onSubmit = async (data) => {
     await updateProfile.mutateAsync({ ...data, id: session.user.id });
-  setIsEditing(false);
+    setIsEditing(false);
     toast.success("Profile updated successfully!");
   };
 
@@ -83,6 +84,6 @@ function Settings() {
       </Card>
     </main>
   );
-}
+};
 
 export default Settings;
