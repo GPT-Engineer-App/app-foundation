@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 
-const IMAGE_URL_PREFIX = "https://gzebeizzqadyipfhvkuo.supabase.in/storage/v1/object/public/bucket/";
+const IMAGE_URL_PREFIX = "https://gzebeizzqadyipfhvkuo.supabase.co/storage/v1/object/public/";
 
 const InteractiveTable = () => {
   const { data: animals, isLoading, error } = useAnimals();
