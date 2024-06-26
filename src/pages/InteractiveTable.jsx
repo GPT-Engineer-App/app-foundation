@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { useState, useEffect } from "react";
 import { useDropzone } from 'react-dropzone';
 import { useAnimals, useUpdateAnimal, useDeleteAnimal, supabase } from "../integrations/supabase/index.js";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,6 +20,13 @@ const InteractiveTable = () => {
   const { session } = useSupabaseAuth();
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [animalList, setAnimalList] = useState([]);
+
+  useEffect(() => {
+    if (animals) {
+      setAnimalList(animals.sort((a, b) => a.id - b.id));
+    }
+  }, [animals]);
 
   const handleEdit = (animal) => {
     setSelectedAnimal(animal);
@@ -61,6 +69,16 @@ const InteractiveTable = () => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const items = Array.from(animalList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setAnimalList(items);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -71,46 +89,57 @@ const InteractiveTable = () => {
 
   return (
     <div className="p-4">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Image</TableHead> {/* New Image Column */}
-            <TableHead>Name</TableHead>
-            <TableHead>Species</TableHead>
-            <TableHead>Created At</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {animals.map((animal) => (
-            <TableRow key={animal.id}>
-              <TableCell>{animal.id}</TableCell>
-              <TableCell>
-                {animal.image_url ? (
-                  <img src={`${IMAGE_URL_PREFIX}${animal.image_url}`} alt={animal.name} className="h-12 w-12 object-cover" />
-                ) : (
-                  "No Image"
-                )}
-              </TableCell>
-              <TableCell>{animal.name}</TableCell>
-              <TableCell>{animal.species}</TableCell>
-              <TableCell>{new Date(animal.created_at).toLocaleDateString()}</TableCell>
-              <TableCell>
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger asChild>
-                    <MoreHorizontal className="h-4 w-4 cursor-pointer" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => handleEdit(animal)}>Edit</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDelete(animal.id)}>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="animals">
+          {(provided) => (
+            <Table {...provided.droppableProps} ref={provided.innerRef}>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Image</TableHead> {/* New Image Column */}
+                  <TableHead>Name</TableHead>
+                  <TableHead>Species</TableHead>
+                  <TableHead>Created At</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {animalList.map((animal, index) => (
+                  <Draggable key={animal.id} draggableId={animal.id.toString()} index={index}>
+                    {(provided) => (
+                      <TableRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <TableCell>{animal.id}</TableCell>
+                        <TableCell>
+                          {animal.image_url ? (
+                            <img src={`${IMAGE_URL_PREFIX}${animal.image_url}`} alt={animal.name} className="h-12 w-12 object-cover" />
+                          ) : (
+                            "No Image"
+                          )}
+                        </TableCell>
+                        <TableCell>{animal.name}</TableCell>
+                        <TableCell>{animal.species}</TableCell>
+                        <TableCell>{new Date(animal.created_at).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                              <MoreHorizontal className="h-4 w-4 cursor-pointer" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => handleEdit(animal)}>Edit</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleDelete(animal.id)}>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </TableBody>
+            </Table>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {isEditing && (
         <Dialog open={isEditing} onOpenChange={setIsEditing}>
