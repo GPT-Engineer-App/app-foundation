@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 
+const IMAGE_URL_PREFIX = "https://gzebeizzqadyipfhvkuo.supabase.in/storage/v1/object/public/bucket/";
+
 const InteractiveTable = () => {
   const { data: animals, isLoading, error } = useAnimals();
   const updateAnimal = useUpdateAnimal();
@@ -41,7 +43,7 @@ const InteractiveTable = () => {
           return;
         }
 
-        selectedAnimal.image_url = `/animals/${data.path}`;
+        selectedAnimal.image_url = `${IMAGE_URL_PREFIX}${data.path}`;
         delete selectedAnimal.imageFile; // Ensure imageFile is not saved in the database
       }
 
@@ -86,7 +88,7 @@ const InteractiveTable = () => {
               <TableCell>{animal.id}</TableCell>
               <TableCell>
                 {animal.image_url ? (
-                  <img src={animal.image_url} alt={animal.name} className="h-12 w-12 object-cover" />
+                  <img src={`${IMAGE_URL_PREFIX}${animal.image_url}`} alt={animal.name} className="h-12 w-12 object-cover" />
                 ) : (
                   "No Image"
                 )}
