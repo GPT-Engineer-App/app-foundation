@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -47,7 +48,11 @@ const Chatbot = () => {
               message.sender === "user" ? "bg-blue-500 text-white self-end" : "bg-gray-300 text-black self-start"
             }`}
           >
-            {message.text}
+            {message.sender === "bot" ? (
+              <ReactMarkdown>{message.text}</ReactMarkdown>
+            ) : (
+              message.text
+            )}
           </div>
         ))}
       </div>
