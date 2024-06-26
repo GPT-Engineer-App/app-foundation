@@ -41,7 +41,7 @@ const InteractiveTable = () => {
           return;
         }
 
-        selectedAnimal.image_url = data.path;
+        selectedAnimal.image_url = `/animals/${data.path}`;
         delete selectedAnimal.imageFile; // Ensure imageFile is not saved in the database
       }
 
