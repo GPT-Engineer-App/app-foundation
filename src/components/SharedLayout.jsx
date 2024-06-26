@@ -37,6 +37,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "../integrations/supabase/index.js";
+import Chatbot from "../pages/Chatbot.jsx";
 
 const SharedLayout = () => {
   const { session, logout } = useSupabaseAuth();
@@ -81,6 +82,17 @@ const SharedLayout = () => {
               >
                 <Table className="h-4 w-4" />
                 Animals
+              </NavLink>
+              <NavLink
+                to="/chatbot"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                  }`
+                }
+              >
+                <Bot className="h-4 w-4" />
+                Chatbot
               </NavLink>
             </nav>
           </div>
@@ -129,6 +141,17 @@ const SharedLayout = () => {
                 >
                   <Table className="h-5 w-5" />
                   Animals
+                </NavLink>
+                <NavLink
+                  to="/chatbot"
+                  className={({ isActive }) =>
+                    `mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 transition-all hover:text-primary ${
+                      isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                    }`
+                  }
+                >
+                  <Bot className="h-5 w-5" />
+                  Chatbot
                 </NavLink>
               </nav>
             </SheetContent>
