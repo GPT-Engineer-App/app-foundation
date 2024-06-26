@@ -150,7 +150,7 @@ const SharedLayout = () => {
               <Button variant="secondary" size="icon" className="rounded-full flex items-center gap-2">
                 {profile?.username && <span>{profile.username}</span>}
                 <Avatar>
-                  <AvatarImage src={`https://gzebeizzqadyipfhvkuo.supabase.in/storage/v1/object/public/bucket/${profile?.avatar_url}`} alt="User Avatar" />
+                  <AvatarImage src={profile?.avatar_url} alt="User Avatar" />
                   <AvatarFallback>
                     <User className="h-4 w-4" />
                   </AvatarFallback>

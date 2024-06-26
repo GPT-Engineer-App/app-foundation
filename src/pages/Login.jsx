@@ -21,7 +21,7 @@ export default function Login() {
       </div>
       <div className="hidden lg:flex w-1/2">
         <img
-          src="https://gzebeizzqadyipfhvkuo.supabase.in/storage/v1/object/public/bucket/images/stockholm-city.jpg"
+          src="/images/stockholm-city.jpg"
           alt="Stockholm City"
           width="1920"
           height="1080"
