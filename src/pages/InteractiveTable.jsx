@@ -8,11 +8,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { MoreHorizontal } from "lucide-react";
+import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 
 const InteractiveTable = () => {
   const { data: animals, isLoading, error } = useAnimals();
   const updateAnimal = useUpdateAnimal();
   const deleteAnimal = useDeleteAnimal();
+  const { session } = useSupabaseAuth();
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -31,7 +33,7 @@ const InteractiveTable = () => {
       if (selectedAnimal.imageFile) {
         const { data, error } = await supabase.storage
           .from('animals')
-          .upload(`public/${selectedAnimal.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+          .upload(`public/${session.user.id}/${selectedAnimal.id}/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
 
         if (error) {
           console.log("Image upload error:", error);
