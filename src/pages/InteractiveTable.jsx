@@ -97,9 +97,7 @@ const InteractiveTable = () => {
               <TableCell>
                 <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    <MoreHorizontal className="h-4 w-4 cursor-pointer" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => handleEdit(animal)}>Edit</DropdownMenuItem>

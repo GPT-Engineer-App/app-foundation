@@ -80,7 +80,7 @@ const SharedLayout = () => {
                 }
               >
                 <Table className="h-4 w-4" />
-                Interactive table
+                Animals (with Supabase)
               </NavLink>
             </nav>
           </div>
@@ -128,7 +128,7 @@ const SharedLayout = () => {
                   }
                 >
                   <Table className="h-5 w-5" />
-                  Interactive table
+                  Animals (with Supabase)
                 </NavLink>
               </nav>
             </SheetContent>
