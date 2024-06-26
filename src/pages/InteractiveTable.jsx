@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useAnimals, useUpdateAnimal, useDeleteAnimal } from "../integrations/supabase/index.js";
+import { useDropzone } from 'react-dropzone';
+import { useAnimals, useUpdateAnimal, useDeleteAnimal, supabase } from "../integrations/supabase/index.js";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -26,10 +27,29 @@ const InteractiveTable = () => {
   };
 
   const handleSave = async () => {
+    if (selectedAnimal.imageFile) {
+      const { data, error } = await supabase.storage
+        .from('animals')
+        .upload(`public/${selectedAnimal.imageFile.name}`, selectedAnimal.imageFile);
+
+      if (error) {
+        toast.error("Failed to upload image");
+        return;
+      }
+
+      selectedAnimal.image_url = data.path;
+    }
+
     await updateAnimal.mutateAsync(selectedAnimal);
     setIsEditing(false);
     toast.success("Animal updated successfully!");
   };
+
+  const onDrop = (acceptedFiles) => {
+    setSelectedAnimal({ ...selectedAnimal, imageFile: acceptedFiles[0] });
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -98,6 +118,14 @@ const InteractiveTable = () => {
                   value={selectedAnimal.species}
                   onChange={(e) => setSelectedAnimal({ ...selectedAnimal, species: e.target.value })}
                 />
+              </div>
+              <div {...getRootProps()} className="border-dashed border-2 p-4">
+                <input {...getInputProps()} />
+                {selectedAnimal.imageFile ? (
+                  <p>{selectedAnimal.imageFile.name}</p>
+                ) : (
+                  <p>Drag 'n' drop an image here, or click to select one</p>
+                )}
               </div>
               <Button onClick={handleSave}>Save</Button>
             </div>
