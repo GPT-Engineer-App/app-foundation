@@ -1,16 +1,18 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SupabaseAuthUI, useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 
 export default function Login() {
   const { session } = useSupabaseAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (session) {
-      navigate("/");
+      const redirectTo = location.state?.from?.pathname || "/";
+      navigate(redirectTo);
     }
-  }, [session, navigate]);
+  }, [session, navigate, location]);
 
   return (
     <div className="flex min-h-screen">
