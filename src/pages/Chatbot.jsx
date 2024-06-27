@@ -16,7 +16,7 @@ const Chatbot = () => {
 
   const handleSend = async () => {
     if (input.trim()) {
-      const userMessage = { thread_id: threadId, sender: "user", message: input };
+      const userMessage = { thread_id: threadId, user_id: session.user.id, message: input };
       setInput("");
       try {
         await addChatMessage.mutateAsync(userMessage);
@@ -30,7 +30,7 @@ const Chatbot = () => {
 
         if (response.ok) {
           const data = await response.json();
-          const botMessage = { thread_id: threadId, sender: "bot", message: data.message };
+          const botMessage = { thread_id: threadId, user_id: null, message: data.message };
           await addChatMessage.mutateAsync(botMessage);
         } else {
           console.error("Failed to fetch bot response");
@@ -74,24 +74,24 @@ const Chatbot = () => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex items-start my-2 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex items-start my-2 ${message.user_id === session.user.id ? "justify-end" : "justify-start"}`}
           >
-            {message.sender === "bot" && (
+            {message.user_id === null && (
               <Avatar className="mr-2">
                 <AvatarImage src="/images/bot-avatar.png" alt="Bot Avatar" />
                 <AvatarFallback>Bot</AvatarFallback>
               </Avatar>
             )}
             <div
-              className={`p-2 rounded-lg ${message.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-300 text-black"}`}
+              className={`p-2 rounded-lg ${message.user_id === session.user.id ? "bg-blue-500 text-white" : "bg-gray-300 text-black"}`}
             >
-              {message.sender === "bot" ? (
+              {message.user_id === null ? (
                 <ReactMarkdown>{message.message}</ReactMarkdown>
               ) : (
                 message.message
               )}
             </div>
-            {message.sender === "user" && (
+            {message.user_id === session.user.id && (
               <Avatar className="ml-2">
                 <AvatarImage src={session.user.user_metadata.avatar_url} alt="User Avatar" />
                 <AvatarFallback>{session.user.email[0]}</AvatarFallback>
