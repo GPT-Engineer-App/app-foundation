@@ -10,7 +10,7 @@ import { useChatMessages, useAddChatMessage } from "../integrations/supabase/ind
 const Chatbot = () => {
   const { session } = useSupabaseAuth();
   const [input, setInput] = useState("");
-  const threadId = "00000000-0000-0000-0000-000000000000"; // Replace with your actual thread ID
+  const threadId = "thread_MK8FMEVy4KCVROHOycAqFMwO"; // Replace with your actual thread ID
   const { data: messages, isLoading, error } = useChatMessages(threadId);
   const addChatMessage = useAddChatMessage();
 
