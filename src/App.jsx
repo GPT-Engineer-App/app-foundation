@@ -7,6 +7,7 @@ import Settings from "./pages/Settings.jsx";
 import InteractiveTable from "./pages/InteractiveTable.jsx";
 import Chatbot from "./pages/Chatbot.jsx"; // Import the Chatbot page
 import { Toaster } from 'sonner';
+import MapPage from "./pages/Map.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/interactive-table" element={<InteractiveTable />} />
             <Route path="/chatbot" element={<Chatbot />} /> {/* Add the Chatbot route */}
+            <Route path="/map" element={<MapPage />} />
           </Route>
         </Routes>
       </Router>

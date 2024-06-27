@@ -13,6 +13,7 @@ import {
   Users,
   User,
   Table,
+  Map,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -94,6 +95,17 @@ const SharedLayout = () => {
                 <Bot className="h-4 w-4" />
                 Chatbot
               </NavLink>
+              <NavLink
+                to="/map"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                  }`
+                }
+              >
+                <Map className="h-4 w-4" />
+                Map
+              </NavLink>
             </nav>
           </div>
         </div>
@@ -152,6 +164,17 @@ const SharedLayout = () => {
                 >
                   <Bot className="h-5 w-5" />
                   Chatbot
+                </NavLink>
+                <NavLink
+                  to="/map"
+                  className={({ isActive }) =>
+                    `mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 transition-all hover:text-primary ${
+                      isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                    }`
+                  }
+                >
+                  <Map className="h-5 w-5" />
+                  Map
                 </NavLink>
               </nav>
             </SheetContent>
