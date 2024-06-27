@@ -19,53 +19,134 @@ const fromSupabase = async (query) => {
 
 /* supabase integration types
 
-// EXAMPLE TYPES SECTION
-// DO NOT USE TYPESCRIPT
+### chat_messages
 
-### foos
+| name       | type        | format | required |
+|------------|-------------|--------|----------|
+| id         | uuid        | string | true     |
+| thread_id  | text        | string | true     |
+| user_id    | uuid        | string | false    |
+| message    | text        | string | true     |
+| created_at | timestamptz | string | false    |
 
-| name    | type | format | required |
-|---------|------|--------|----------|
-| id      | int8 | number | true     |
-| title   | text | string | true     |
-| date    | date | string | true     |
+### profiles
 
-### bars
+| name       | type        | format | required |
+|------------|-------------|--------|----------|
+| id         | uuid        | string | true     |
+| updated_at | timestamptz | string | false    |
+| username   | text        | string | false    |
+| full_name  | text        | string | false    |
+| avatar_url | text        | string | false    |
+| website    | text        | string | false    |
 
-| name    | type | format | required |
-|---------|------|--------|----------|
-| id      | int8 | number | true     |
-| foo_id  | int8 | number | true     |  // foreign key to foos
-	
+### animals
+
+| name       | type        | format | required |
+|------------|-------------|--------|----------|
+| id         | bigint      | number | true     |
+| created_at | timestamptz | string | true     |
+| name       | text        | string | false    |
+| species    | text        | string | false    |
+| image_url  | text        | string | false    |
+
 */
 
-// Example hook for models
-
-export const useFoo = ()=> useQuery({
-    queryKey: ['foos'],
-    queryFn: fromSupabase(supabase.from('foos')),
-})
-export const useAddFoo = () => {
+// Hooks for chat_messages
+export const useChatMessages = (threadId) => useQuery({
+    queryKey: ['chat_messages', threadId],
+    queryFn: () => fromSupabase(supabase.from('chat_messages').select('*').eq('thread_id', threadId)),
+});
+export const useAddChatMessage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newFoo)=> fromSupabase(supabase.from('foos').insert([{ title: newFoo.title }])),
-        onSuccess: ()=> {
-            queryClient.invalidateQueries('foos');
+        mutationFn: (newMessage) => fromSupabase(supabase.from('chat_messages').insert([newMessage])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('chat_messages');
+        },
+    });
+};
+export const useUpdateChatMessage = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedMessage) => fromSupabase(supabase.from('chat_messages').update(updatedMessage).eq('id', updatedMessage.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('chat_messages');
+        },
+    });
+};
+export const useDeleteChatMessage = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('chat_messages').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('chat_messages');
         },
     });
 };
 
-export const useBar = ()=> useQuery({
-    queryKey: ['bars'],
-    queryFn: fromSupabase(supabase.from('bars')),
-})
-export const useAddBar = () => {
+// Hooks for profiles
+export const useProfile = (id) => useQuery({
+    queryKey: ['profiles', id],
+    queryFn: () => fromSupabase(supabase.from('profiles').select('*').eq('id', id).single()),
+});
+export const useAddProfile = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newBar)=> fromSupabase(supabase.from('bars').insert([{ foo_id: newBar.foo_id }])),
-        onSuccess: ()=> {
-            queryClient.invalidateQueries('bars');
+        mutationFn: (newProfile) => fromSupabase(supabase.from('profiles').insert([newProfile])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profiles');
+        },
+    });
+};
+export const useUpdateProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedProfile) => fromSupabase(supabase.from('profiles').update(updatedProfile).eq('id', updatedProfile.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profiles');
+        },
+    });
+};
+export const useDeleteProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('profiles').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('profiles');
         },
     });
 };
 
+// Hooks for animals
+export const useAnimals = () => useQuery({
+    queryKey: ['animals'],
+    queryFn: () => fromSupabase(supabase.from('animals').select('*')),
+});
+export const useAddAnimal = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newAnimal) => fromSupabase(supabase.from('animals').insert([newAnimal])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('animals');
+        },
+    });
+};
+export const useUpdateAnimal = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedAnimal) => fromSupabase(supabase.from('animals').update(updatedAnimal).eq('id', updatedAnimal.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('animals');
+        },
+    });
+};
+export const useDeleteAnimal = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('animals').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('animals');
+        },
+    });
+};
