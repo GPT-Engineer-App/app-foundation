@@ -92,7 +92,7 @@ const SharedLayout = () => {
                 }
               >
                 <Bot className="h-4 w-4" />
-                TutorBot
+                Chatbot
               </NavLink>
             </nav>
           </div>
@@ -151,7 +151,7 @@ const SharedLayout = () => {
                   }
                 >
                   <Bot className="h-5 w-5" />
-                  TutorBot
+                  Chatbot
                 </NavLink>
               </nav>
             </SheetContent>
