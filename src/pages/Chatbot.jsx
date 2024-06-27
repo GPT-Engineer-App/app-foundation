@@ -38,6 +38,12 @@ const Chatbot = () => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSend();
+    }
+  };
+
   return (
     <div className="flex flex-col h-full p-4">
       <div className="flex-1 overflow-y-auto mb-4">
@@ -60,6 +66,7 @@ const Chatbot = () => {
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Type a message..."
           className="flex-1 mr-2"
         />
