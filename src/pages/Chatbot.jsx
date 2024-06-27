@@ -100,15 +100,17 @@ const Chatbot = () => {
           </div>
         ))}
       </div>
-      <div className="flex">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          className="flex-1 mr-2"
-        />
-        <Button onClick={handleSend}>Send</Button>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+        <div className="flex">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message..."
+            className="flex-1 mr-2"
+          />
+          <Button onClick={handleSend}>Send</Button>
+        </div>
       </div>
     </div>
   );
