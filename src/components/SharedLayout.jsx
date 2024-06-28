@@ -14,6 +14,7 @@ import {
   User,
   Table,
   Map,
+  Trello,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -106,6 +107,17 @@ const SharedLayout = () => {
                 <Map className="h-4 w-4" />
                 Map
               </NavLink>
+              <NavLink
+                to="/trello-board"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                  }`
+                }
+              >
+                <Trello className="h-4 w-4" />
+                Trello Board
+              </NavLink>
             </nav>
           </div>
         </div>
@@ -175,6 +187,17 @@ const SharedLayout = () => {
                 >
                   <Map className="h-5 w-5" />
                   Map
+                </NavLink>
+                <NavLink
+                  to="/trello-board"
+                  className={({ isActive }) =>
+                    `mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 transition-all hover:text-primary ${
+                      isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                    }`
+                  }
+                >
+                  <Trello className="h-5 w-5" />
+                  Trello Board
                 </NavLink>
               </nav>
             </SheetContent>

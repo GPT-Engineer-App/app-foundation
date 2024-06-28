@@ -6,6 +6,7 @@ import { SupabaseAuthProvider } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Settings.jsx";
 import InteractiveTable from "./pages/InteractiveTable.jsx";
 import Chatbot from "./pages/Chatbot.jsx"; // Import the Chatbot page
+import TrelloBoard from "./pages/TrelloBoard.jsx"; // Import the TrelloBoard page
 import { Toaster } from 'sonner';
 import MapPage from "./pages/Map.jsx";
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/interactive-table" element={<InteractiveTable />} />
             <Route path="/chatbot" element={<Chatbot />} /> {/* Add the Chatbot route */}
             <Route path="/map" element={<MapPage />} />
+            <Route path="/trello-board" element={<TrelloBoard />} /> {/* Add the TrelloBoard route */}
           </Route>
         </Routes>
       </Router>
