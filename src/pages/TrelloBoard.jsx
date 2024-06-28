@@ -30,6 +30,13 @@ const TrelloBoard = () => {
     }
   }, [tasksData]);
 
+  useEffect(() => {
+    if (selectedTask && usersData) {
+      const assignedUser = usersData.find(user => user.id === selectedTask.assigned_user_id);
+      setSelectedUser(assignedUser ? { value: assignedUser.id, label: assignedUser.username } : null);
+    }
+  }, [selectedTask, usersData]);
+
   const onDragEnd = async (result) => {
     const { source, destination } = result;
 
