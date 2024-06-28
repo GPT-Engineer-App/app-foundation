@@ -25,18 +25,21 @@ const randomLocations = Array.from({ length: 10 }, () => ({
 
 const MapPage = () => {
   const [selectedBike, setSelectedBike] = useState(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleMarkerClick = (bike) => {
     setSelectedBike(bike);
+    setIsSheetOpen(true);
   };
 
   const handleClose = () => {
     setSelectedBike(null);
+    setIsSheetOpen(false);
   };
 
   return (
-    <div className="h-screen w-full">
-      <MapContainer center={[51.505, -0.09]} zoom={13} className="h-full w-full">
+    <div className="h-screen w-full relative">
+      <MapContainer center={[51.505, -0.09]} zoom={13} className={`h-full w-full ${isSheetOpen ? 'opacity-50' : ''}`}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -46,7 +49,7 @@ const MapPage = () => {
         ))}
       </MapContainer>
       {selectedBike && (
-        <Sheet open={!!selectedBike} onOpenChange={handleClose}>
+        <Sheet open={isSheetOpen} onOpenChange={handleClose}>
           <SheetContent side="right" className="z-[1000]">
             <Card>
               <CardHeader>
