@@ -47,7 +47,7 @@ const MapPage = () => {
       </MapContainer>
       {selectedBike && (
         <Sheet open={!!selectedBike} onOpenChange={handleClose}>
-          <SheetContent side="right">
+          <SheetContent side="right" className="z-[1000]">
             <Card>
               <CardHeader>
                 <CardTitle>Bike Information</CardTitle>
