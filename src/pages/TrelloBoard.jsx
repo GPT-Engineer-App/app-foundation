@@ -91,7 +91,9 @@ const TrelloBoard = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Task Board</h1>
-      <Button onClick={() => setIsModalOpen(true)} className="mb-4">Add Task</Button>
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => setIsModalOpen(true)}>Add Task</Button>
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-3 gap-4">
           {Object.keys(tasks).map((columnId) => (
