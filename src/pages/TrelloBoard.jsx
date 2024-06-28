@@ -118,12 +118,12 @@ const TrelloBoard = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="bg-white p-2 mb-2 rounded-md shadow-md flex justify-between items-center"
+                          className="bg-white p-2 mb-2 rounded-md shadow-md flex justify-between items-center relative"
                         >
                           <div className="flex items-center">
                             {task.content}
                             {task.user_id && (
-                              <Avatar className="ml-2">
+                              <Avatar className="ml-2 h-8 w-8"> {/* Adjusted size to 2/3 */}
                                 <AvatarImage src={usersData.find(user => user.id === task.user_id)?.avatar_url} alt="User Avatar" />
                                 <AvatarFallback>{usersData.find(user => user.id === task.user_id)?.username[0]}</AvatarFallback>
                               </Avatar>
@@ -140,6 +140,9 @@ const TrelloBoard = () => {
                               <DropdownMenuItem onClick={() => handleDeleteTask(task.id)}>Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
+                        <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                            {new Date(task.created_at).toLocaleDateString()}
+                          </div>
                         </div>
                       )}
                     </Draggable>
