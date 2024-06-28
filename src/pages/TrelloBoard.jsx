@@ -64,6 +64,7 @@ const TrelloBoard = () => {
 
     // Update task status in Supabase
     await updateTask.mutateAsync({ ...removed, status: destination.droppableId });
+    toast.success(`Task status updated to ${destination.droppableId}`);
   };
 
   const handleAddTask = async () => {
