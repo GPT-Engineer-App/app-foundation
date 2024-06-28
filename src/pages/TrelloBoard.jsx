@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const initialTasks = {
   planned: [
@@ -17,6 +20,8 @@ const initialTasks = {
 
 const TrelloBoard = () => {
   const [tasks, setTasks] = useState(initialTasks);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTaskContent, setNewTaskContent] = useState("");
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
@@ -43,9 +48,20 @@ const TrelloBoard = () => {
     });
   };
 
+  const handleAddTask = () => {
+    const newTask = { id: `task-${Date.now()}`, content: newTaskContent };
+    setTasks({
+      ...tasks,
+      planned: [...tasks.planned, newTask],
+    });
+    setNewTaskContent("");
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Trello Board</h1>
+      <Button onClick={() => setIsModalOpen(true)} className="mb-4">Add Task</Button>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-3 gap-4">
           {Object.keys(tasks).map((columnId) => (
@@ -78,6 +94,22 @@ const TrelloBoard = () => {
           ))}
         </div>
       </DragDropContext>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Task</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              value={newTaskContent}
+              onChange={(e) => setNewTaskContent(e.target.value)}
+              placeholder="Task content"
+            />
+            <Button onClick={handleAddTask}>Add Task</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
