@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTasks, useAddTask, useUpdateTask, useDeleteTask, useUsers } from "../integrations/supabase/index.js";
 import { toast } from "sonner";
-import { MoreVertical } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Select from 'react-select';
 
 const TrelloBoard = () => {
@@ -118,30 +116,22 @@ const TrelloBoard = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="bg-white p-2 mb-2 rounded-md shadow-md flex justify-between items-center relative"
+                          className="bg-white p-2 mb-2 rounded-md shadow-md flex flex-col justify-between relative"
+                          onClick={() => handleEditTask(task)}
                         >
                           <div className="flex items-center">
                             {task.content}
+                          </div>
+                          <div className="flex justify-between items-center mt-2">
+                            <div className="text-xs text-gray-500">
+                              {new Date(task.created_at).toLocaleDateString()}
+                            </div>
                             {task.user_id && (
-                              <Avatar className="ml-2 h-8 w-8"> {/* Adjusted size to 2/3 */}
+                              <Avatar className="h-8 w-8"> {/* Adjusted size to 2/3 */}
                                 <AvatarImage src={usersData.find(user => user.id === task.user_id)?.avatar_url} alt="User Avatar" />
                                 <AvatarFallback>{usersData.find(user => user.id === task.user_id)?.username[0]}</AvatarFallback>
                               </Avatar>
                             )}
-                          </div>
-                          <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem onClick={() => handleEditTask(task)}>Edit</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleDeleteTask(task.id)}>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        <div className="absolute bottom-2 right-2 text-xs text-gray-500">
-                            {new Date(task.created_at).toLocaleDateString()}
                           </div>
                         </div>
                       )}
