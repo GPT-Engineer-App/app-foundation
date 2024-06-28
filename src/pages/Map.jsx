@@ -3,8 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Bike } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -50,23 +48,19 @@ const MapPage = () => {
         ))}
       </MapContainer>
       {selectedBike && (
-        <Sheet open={true} onOpenChange={handleClose}>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Bike Information</SheetTitle>
-            </SheetHeader>
-            <Card>
-              <CardHeader>
-                <CardTitle>Location: {selectedBike.info.location}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p><strong>Charged:</strong> {selectedBike.info.charged ? <Badge variant="success">Yes</Badge> : <Badge variant="destructive">No</Badge>}</p>
-                <p><strong>Last Used:</strong> {selectedBike.info.lastUsed}</p>
-              </CardContent>
-            </Card>
-            <Button onClick={handleClose}>Close</Button>
-          </SheetContent>
-        </Sheet>
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+          <Card>
+            <CardHeader>
+              <CardTitle>Bike Information</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p><strong>Location:</strong> {selectedBike.info.location}</p>
+              <p><strong>Charged:</strong> {selectedBike.info.charged ? <Badge variant="success">Yes</Badge> : <Badge variant="destructive">No</Badge>}</p>
+              <p><strong>Last Used:</strong> {selectedBike.info.lastUsed}</p>
+            </CardContent>
+          </Card>
+          <Button onClick={handleClose}>Close</Button>
+        </div>
       )}
     </div>
   );
