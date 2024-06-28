@@ -43,16 +43,24 @@ const TrelloBoard = () => {
 
     const sourceColumn = tasks[source.droppableId];
     const destColumn = tasks[destination.droppableId];
-    const sourceItems = [...sourceColumn];
-    const destItems = [...destColumn];
+    const sourceItems = Array.from(sourceColumn);
+    const destItems = source.droppableId === destination.droppableId ? sourceItems : Array.from(destColumn);
     const [removed] = sourceItems.splice(source.index, 1);
-    destItems.splice(destination.index, 0, removed);
 
-    setTasks({
-      ...tasks,
-      [source.droppableId]: sourceItems,
-      [destination.droppableId]: destItems,
-    });
+    if (source.droppableId === destination.droppableId) {
+      sourceItems.splice(destination.index, 0, removed);
+      setTasks({
+        ...tasks,
+        [source.droppableId]: sourceItems,
+      });
+    } else {
+      destItems.splice(destination.index, 0, removed);
+      setTasks({
+        ...tasks,
+        [source.droppableId]: sourceItems,
+        [destination.droppableId]: destItems,
+      });
+    }
 
     // Update task status in Supabase
     await updateTask.mutateAsync({ ...removed, status: destination.droppableId });
