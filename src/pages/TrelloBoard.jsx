@@ -1,29 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const initialTasks = {
-  planned: [
-    { id: 'task-1', content: 'Task 1' },
-    { id: 'task-2', content: 'Task 2' },
-  ],
-  doing: [
-    { id: 'task-3', content: 'Task 3' },
-  ],
-  done: [
-    { id: 'task-4', content: 'Task 4' },
-  ],
-};
+import { useTasks, useAddTask, useUpdateTask, useDeleteTask } from "../integrations/supabase/index.js";
+import { toast } from "sonner";
 
 const TrelloBoard = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const { data: tasksData, isLoading, error } = useTasks();
+  const addTask = useAddTask();
+  const updateTask = useUpdateTask();
+  const deleteTask = useDeleteTask();
+  const [tasks, setTasks] = useState({ planned: [], doing: [], done: [] });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTaskContent, setNewTaskContent] = useState("");
 
-  const onDragEnd = (result) => {
+  useEffect(() => {
+    if (tasksData) {
+      const planned = tasksData.filter(task => task.status === 'planned');
+      const doing = tasksData.filter(task => task.status === 'doing');
+      const done = tasksData.filter(task => task.status === 'done');
+      setTasks({ planned, doing, done });
+    }
+  }, [tasksData]);
+
+  const onDragEnd = async (result) => {
     const { source, destination } = result;
 
     if (!destination) {
@@ -46,17 +48,26 @@ const TrelloBoard = () => {
       [source.droppableId]: sourceItems,
       [destination.droppableId]: destItems,
     });
+
+    // Update task status in Supabase
+    await updateTask.mutateAsync({ ...removed, status: destination.droppableId });
   };
 
-  const handleAddTask = () => {
-    const newTask = { id: `task-${Date.now()}`, content: newTaskContent };
-    setTasks({
-      ...tasks,
-      planned: [...tasks.planned, newTask],
-    });
+  const handleAddTask = async () => {
+    const newTask = { content: newTaskContent, status: 'planned', created_at: new Date().toISOString() };
+    await addTask.mutateAsync(newTask);
     setNewTaskContent("");
     setIsModalOpen(false);
+    toast.success("Task added successfully!");
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading tasks</div>;
+  }
 
   return (
     <div className="p-4">
@@ -74,7 +85,7 @@ const TrelloBoard = () => {
                 >
                   <h2 className="text-xl font-semibold mb-2">{columnId.charAt(0).toUpperCase() + columnId.slice(1)}</h2>
                   {tasks[columnId].map((task, index) => (
-                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                    <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
                       {(provided) => (
                         <div
                           ref={provided.innerRef}
