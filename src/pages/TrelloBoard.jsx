@@ -10,8 +10,8 @@ import { toast } from "sonner";
 import Select from 'react-select';
 
 const TrelloBoard = () => {
-  const { data: tasksData, isLoading, error } = useTasks();
-  const { data: usersData } = useUsers(); // Fetch users
+  const { data: tasksData, isLoading: isLoadingTasks, error: errorTasks } = useTasks();
+  const { data: usersData, isLoading: isLoadingUsers, error: errorUsers } = useUsers(); // Fetch users
   const addTask = useAddTask();
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
@@ -84,12 +84,12 @@ const TrelloBoard = () => {
     toast.success("Task updated successfully!");
   };
 
-  if (isLoading) {
+  if (isLoadingTasks || isLoadingUsers) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error loading tasks</div>;
+  if (errorTasks || errorUsers) {
+    return <div>Error loading data</div>;
   }
 
   return (
