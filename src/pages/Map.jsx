@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Bike } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -50,11 +50,11 @@ const MapPage = () => {
         ))}
       </MapContainer>
       {selectedBike && (
-        <Dialog open={true} onOpenChange={handleClose}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Bike Information</DialogTitle>
-            </DialogHeader>
+        <Sheet open={true} onOpenChange={handleClose}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Bike Information</SheetTitle>
+            </SheetHeader>
             <Card>
               <CardHeader>
                 <CardTitle>Location: {selectedBike.info.location}</CardTitle>
@@ -65,8 +65,8 @@ const MapPage = () => {
               </CardContent>
             </Card>
             <Button onClick={handleClose}>Close</Button>
-          </DialogContent>
-        </Dialog>
+          </SheetContent>
+        </Sheet>
       )}
     </div>
   );
