@@ -31,13 +31,14 @@ const fromSupabase = async (query) => {
 
 ### tasks
 
-| name       | type        | format | required |
-|------------|-------------|--------|----------|
-| id         | uuid        | string | true     |
-| content    | text        | string | true     |
-| status     | text        | string | false    |
-| created_at | timestamptz | string | false    |
-| user_id    | uuid        | string | false    |
+| name             | type        | format | required |
+|------------------|-------------|--------|----------|
+| id               | uuid        | string | true     |
+| content          | text        | string | true     |
+| status           | text        | string | false    |
+| created_at       | timestamptz | string | false    |
+| user_id          | uuid        | string | false    |
+| assigned_user_id | uuid        | string | false    |
 
 ### profiles
 
@@ -193,3 +194,9 @@ export const useDeleteAnimal = () => {
         },
     });
 };
+
+// Hooks for users
+export const useUsers = () => useQuery({
+    queryKey: ['profiles'],
+    queryFn: () => fromSupabase(supabase.from('profiles').select('*')),
+});
