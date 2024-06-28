@@ -71,7 +71,7 @@ const TrelloBoard = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Trello Board</h1>
+      <h1 className="text-2xl font-bold mb-4">Task Board</h1>
       <Button onClick={() => setIsModalOpen(true)} className="mb-4">Add Task</Button>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-3 gap-4">
