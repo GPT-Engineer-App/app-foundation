@@ -78,7 +78,7 @@ const TrelloBoard = () => {
 
   const handleEditTask = (task) => {
     setSelectedTask(task);
-    setSelectedUser(usersData.find(user => user.id === task.user_id) || null); // Set selected user
+    setSelectedUser(usersData.find(user => user.id === task.user_id) || null); // Set selected user when editing a task
     setIsModalOpen(true);
   };
 
