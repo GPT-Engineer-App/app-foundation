@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTasks, useAddTask, useUpdateTask, useDeleteTask } from "../integrations/supabase/index.js";
 import { toast } from "sonner";
+import { MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const TrelloBoard = () => {
   const { data: tasksData, isLoading, error } = useTasks();
@@ -15,6 +17,7 @@ const TrelloBoard = () => {
   const [tasks, setTasks] = useState({ planned: [], doing: [], done: [] });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTaskContent, setNewTaskContent] = useState("");
+  const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
     if (tasksData) {
@@ -61,6 +64,22 @@ const TrelloBoard = () => {
     toast.success("Task added successfully!");
   };
 
+  const handleEditTask = (task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    await deleteTask.mutateAsync(taskId);
+    toast.success("Task deleted successfully!");
+  };
+
+  const handleSaveTask = async () => {
+    await updateTask.mutateAsync(selectedTask);
+    setIsModalOpen(false);
+    toast.success("Task updated successfully!");
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -91,9 +110,20 @@ const TrelloBoard = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="bg-white p-2 mb-2 rounded-md shadow-md"
+                          className="bg-white p-2 mb-2 rounded-md shadow-md flex justify-between items-center"
                         >
                           {task.content}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => handleEditTask(task)}>Edit</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleDeleteTask(task.id)}>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       )}
                     </Draggable>
@@ -109,15 +139,17 @@ const TrelloBoard = () => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Task</DialogTitle>
+            <DialogTitle>{selectedTask ? "Edit Task" : "Add New Task"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Input
-              value={newTaskContent}
-              onChange={(e) => setNewTaskContent(e.target.value)}
+              value={selectedTask ? selectedTask.content : newTaskContent}
+              onChange={(e) => selectedTask ? setSelectedTask({ ...selectedTask, content: e.target.value }) : setNewTaskContent(e.target.value)}
               placeholder="Task content"
             />
-            <Button onClick={handleAddTask}>Add Task</Button>
+            <Button onClick={selectedTask ? handleSaveTask : handleAddTask}>
+              {selectedTask ? "Save Task" : "Add Task"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
