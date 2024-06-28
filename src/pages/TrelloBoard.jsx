@@ -113,7 +113,7 @@ const TrelloBoard = () => {
                           className="bg-white p-2 mb-2 rounded-md shadow-md flex justify-between items-center"
                         >
                           {task.content}
-                          <DropdownMenu>
+                          <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon">
                                 <MoreVertical className="h-4 w-4" />
