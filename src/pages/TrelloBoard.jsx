@@ -4,13 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTasks, useAddTask, useUpdateTask, useDeleteTask } from "../integrations/supabase/index.js";
+import { useTasks, useAddTask, useUpdateTask, useDeleteTask, useUsers } from "../integrations/supabase/index.js";
 import { toast } from "sonner";
 import { MoreVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Select from 'react-select';
 
 const TrelloBoard = () => {
   const { data: tasksData, isLoading, error } = useTasks();
+  const { data: usersData } = useUsers(); // Fetch users
   const addTask = useAddTask();
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
@@ -18,6 +20,7 @@ const TrelloBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTaskContent, setNewTaskContent] = useState("");
   const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null); // Add state for selected user
 
   useEffect(() => {
     if (tasksData) {
@@ -57,15 +60,17 @@ const TrelloBoard = () => {
   };
 
   const handleAddTask = async () => {
-    const newTask = { content: newTaskContent, status: 'planned', created_at: new Date().toISOString() };
+    const newTask = { content: newTaskContent, status: 'planned', created_at: new Date().toISOString(), assigned_user_id: selectedUser?.value || null };
     await addTask.mutateAsync(newTask);
     setNewTaskContent("");
+    setSelectedUser(null); // Reset selected user
     setIsModalOpen(false);
     toast.success("Task added successfully!");
   };
 
   const handleEditTask = (task) => {
     setSelectedTask(task);
+    setSelectedUser(usersData.find(user => user.id === task.assigned_user_id) || null); // Set selected user
     setIsModalOpen(true);
   };
 
@@ -75,7 +80,7 @@ const TrelloBoard = () => {
   };
 
   const handleSaveTask = async () => {
-    await updateTask.mutateAsync(selectedTask);
+    await updateTask.mutateAsync({ ...selectedTask, assigned_user_id: selectedUser?.value || null });
     setIsModalOpen(false);
     toast.success("Task updated successfully!");
   };
@@ -114,7 +119,15 @@ const TrelloBoard = () => {
                           {...provided.dragHandleProps}
                           className="bg-white p-2 mb-2 rounded-md shadow-md flex justify-between items-center"
                         >
-                          {task.content}
+                          <div className="flex items-center">
+                            {task.content}
+                            {task.assigned_user_id && (
+                              <Avatar className="ml-2">
+                                <AvatarImage src={usersData.find(user => user.id === task.assigned_user_id)?.avatar_url} alt="User Avatar" />
+                                <AvatarFallback>{usersData.find(user => user.id === task.assigned_user_id)?.username[0]}</AvatarFallback>
+                              </Avatar>
+                            )}
+                          </div>
                           <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon">
@@ -148,6 +161,12 @@ const TrelloBoard = () => {
               value={selectedTask ? selectedTask.content : newTaskContent}
               onChange={(e) => selectedTask ? setSelectedTask({ ...selectedTask, content: e.target.value }) : setNewTaskContent(e.target.value)}
               placeholder="Task content"
+            />
+            <Select
+              value={selectedUser}
+              onChange={setSelectedUser}
+              options={usersData?.map(user => ({ value: user.id, label: user.username })) || []}
+              placeholder="Assign to user"
             />
             <Button onClick={selectedTask ? handleSaveTask : handleAddTask}>
               {selectedTask ? "Save Task" : "Add Task"}
