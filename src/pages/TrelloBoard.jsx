@@ -61,7 +61,7 @@ const TrelloBoard = () => {
   };
 
   const handleAddTask = async () => {
-    const newTask = { content: newTaskContent, status: 'planned', created_at: new Date().toISOString(), assigned_user_id: selectedUser?.value || null };
+    const newTask = { content: newTaskContent, status: 'planned', created_at: new Date().toISOString(), user_id: selectedUser?.value || null };
     await addTask.mutateAsync(newTask);
     setNewTaskContent("");
     setSelectedUser(null); // Reset selected user
@@ -71,7 +71,7 @@ const TrelloBoard = () => {
 
   const handleEditTask = (task) => {
     setSelectedTask(task);
-    setSelectedUser(usersData.find(user => user.id === task.assigned_user_id) || null); // Set selected user
+    setSelectedUser(usersData.find(user => user.id === task.user_id) || null); // Set selected user
     setIsModalOpen(true);
   };
 
@@ -81,7 +81,7 @@ const TrelloBoard = () => {
   };
 
   const handleSaveTask = async () => {
-    await updateTask.mutateAsync({ ...selectedTask, assigned_user_id: selectedUser?.value || null });
+    await updateTask.mutateAsync({ ...selectedTask, user_id: selectedUser?.value || null });
     setIsModalOpen(false);
     toast.success("Task updated successfully!");
   };
@@ -122,10 +122,10 @@ const TrelloBoard = () => {
                         >
                           <div className="flex items-center">
                             {task.content}
-                            {task.assigned_user_id && (
+                            {task.user_id && (
                               <Avatar className="ml-2">
-                                <AvatarImage src={usersData.find(user => user.id === task.assigned_user_id)?.avatar_url} alt="User Avatar" />
-                                <AvatarFallback>{usersData.find(user => user.id === task.assigned_user_id)?.username[0]}</AvatarFallback>
+                                <AvatarImage src={usersData.find(user => user.id === task.user_id)?.avatar_url} alt="User Avatar" />
+                                <AvatarFallback>{usersData.find(user => user.id === task.user_id)?.username[0]}</AvatarFallback>
                               </Avatar>
                             )}
                           </div>
