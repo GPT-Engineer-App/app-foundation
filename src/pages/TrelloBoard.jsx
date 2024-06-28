@@ -164,7 +164,7 @@ const TrelloBoard = () => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedTask ? "Edit Task" : "Add New Task"}</DialogTitle>
+            <DialogTitle>{selectedTask ? "Edit Task" : "Create Task"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Input
