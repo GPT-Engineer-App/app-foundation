@@ -90,8 +90,8 @@ const TrelloBoard = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Task Board</h1>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between mb-4">
+        <h1 className="text-2xl font-bold">Task Board</h1>
         <Button onClick={() => setIsModalOpen(true)}>Add Task</Button>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
