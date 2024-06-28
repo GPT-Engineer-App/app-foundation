@@ -91,6 +91,7 @@ const TrelloBoard = () => {
 
   const handleDeleteTask = async (taskId) => {
     await deleteTask.mutateAsync(taskId);
+    setIsModalOpen(false);
     toast.success("Task deleted successfully!");
   };
 
@@ -181,6 +182,9 @@ const TrelloBoard = () => {
             <Button onClick={selectedTask ? handleSaveTask : handleAddTask}>
               {selectedTask ? "Save Task" : "Add Task"}
             </Button>
+            {selectedTask && (
+              <Button variant="destructive" onClick={() => handleDeleteTask(selectedTask.id)}>Delete Task</Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
